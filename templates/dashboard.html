@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이언아이디 관리자</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+      @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+      body { font-family: Pretendard; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden">
+    <aside class="w-64 bg-slate-900 text-white flex flex-col">
+        <div class="h-16 flex items-center px-6 font-bold text-xl text-blue-400">
+            EonID <span class="text-white text-sm ml-2 font-light">System</span>
+        </div>
+        <nav class="flex-1 px-4 py-4 space-y-2">
+            <a href="/" class="flex items-center px-4 py-3 bg-blue-600 rounded text-white">
+                <i class="ph ph-squares-four mr-3 text-xl"></i> 대시보드
+            </a>
+            <a href="/mobile" class="flex items-center px-4 py-3 text-slate-400 hover:text-white">
+                <i class="ph ph-device-mobile mr-3 text-xl"></i> 모바일 뷰 확인
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-auto">
+        <header class="h-16 bg-white border-b px-8 flex items-center justify-between sticky top-0 z-10">
+            <h1 class="font-bold text-lg">전체 공고 리스트</h1>
+            <a href="/collect" class="bg-blue-50 text-blue-600 px-4 py-2 rounded font-bold text-sm hover:bg-blue-100">
+                <i class="ph ph-arrows-clockwise"></i> 수동 수집
+            </a>
+        </header>
+
+        <div class="p-8">
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b text-slate-500 text-sm">
+                        <tr>
+                            <th class="px-6 py-3">상태</th>
+                            <th class="px-6 py-3">공고명 / 발주처</th>
+                            <th class="px-6 py-3 text-right">추정가격(원)</th>
+                            <th class="px-6 py-3 text-center">마감일</th>
+                            <th class="px-6 py-3 text-center">관심</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bid in bids %}
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="px-6 py-4">
+                              <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">
+                                {{ bid.status }}
+                              </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-800">{{ bid.title }}</div>
+                                <div class="text-xs text-slate-500">{{ bid.agency }} | {{ bid.bid_no }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-right font-bold text-slate-700">{{ bid.price }}</td>
+                            <td class="px-6 py-4 text-center text-sm">{{ bid.date_close }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="/toggle_fav/{{ bid.id }}" class="text-2xl transition {{ 'text-amber-400' if bid.is_favorite else 'text-slate-300 hover:text-amber-400' }}">
+                                    <i class="ph ph-star-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if not bids %}
+                <div class="p-10 text-center text-slate-400">
+                  수집된 공고가 없습니다. 우측 상단 '수동 수집'을 눌러보세요.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>
